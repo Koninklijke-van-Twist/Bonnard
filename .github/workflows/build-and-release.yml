@@ -1,0 +1,48 @@
+name: Build and Release on Master Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'  # Pas aan als je een andere versie gebruikt
+
+      - name: Navigate to project folder
+        working-directory: Logistiek Bonnensorteerder
+        run: echo "Switched to project directory"
+
+      - name: Restore dependencies
+        working-directory: Logistiek Bonnensorteerder
+        run: dotnet restore
+
+      - name: Build Release
+        working-directory: Logistiek Bonnensorteerder
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish app
+        working-directory: Logistiek Bonnensorteerder
+        run: dotnet publish -c Release -o publish
+
+      - name: Zip output
+        working-directory: Logistiek Bonnensorteerder
+        run: Compress-Archive -Path publish\* -DestinationPath ../../Bonnard.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Auto Release - ${{ github.run_number }}"
+          tag_name: "autobuild-${{ github.run_number }}"
+          files: Bonnard.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
