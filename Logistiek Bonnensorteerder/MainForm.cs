@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Authentication.ExtendedProtection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -12,7 +12,7 @@ namespace Logistiek_Bonnensorteerder
     {
         #region Consts
 
-        private const string NoFileSelected = "NoFileSelected";
+        private const string NoFileSelected = "Geen document(en) geselecteerd";
         private const string PdfFileExtension = ".pdf";
 
         // Could have taken this from the Datetime object, but we want them to be consistent regardless of culture settings and include a number.
@@ -22,19 +22,37 @@ namespace Logistiek_Bonnensorteerder
 
         #region Properties
 
+        public bool HasFileSelected => _currentSelectedFile != NoFileSelected;
         public string DestinationFolder => $"{_config.destinationPathRoot}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
+        public string SelectedFile
+        {
+            get
+            {
+                return _currentSelectedFile;
+            }
+
+            set
+            {
+                _currentSelectedFile = value;
+                selectedDocumentPathLabel.Text = Regex.Split(_currentSelectedFile, "\\\\").Last(); ;
+            }
+        }
 
         #endregion
 
         #region Private Variables
 
         private Config _config;
+        private Queue<string> _selectedFiles = new Queue<string>();
+        private string _currentSelectedFile = "";
 
         #endregion
 
         public MainForm()
         {
             InitializeComponent();
+
+            openFileDialog.Multiselect = true;
 
             LoadConfigFile();
             InitializeForm();
@@ -47,7 +65,15 @@ namespace Logistiek_Bonnensorteerder
             if(ValidateInput())
             {
                 Directory.CreateDirectory(DestinationFolder);
-                File.Copy(openFileDialog.FileName, DestinationFolder + GetResultFileName());
+                try
+                {
+                    File.Copy(openFileDialog.FileName, DestinationFolder + GetResultFileName());
+                    OnPostSave();
+                }
+                catch
+                {
+                    MessageBox.Show("Er is een fout opgetreden. Het bestand is niet opgeslagen.\nMogelijk is dit document al eerder ingevoerd; controleer dit handmatig.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
         private void fileSelectorButton_Click(object sender, EventArgs e)
@@ -57,7 +83,10 @@ namespace Logistiek_Bonnensorteerder
 
         private void openFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            selectedDocumentPathLabel.Text = Regex.Split(openFileDialog.FileName, "\\").Last();
+            foreach(string fileName in openFileDialog.FileNames)
+                _selectedFiles.Enqueue(fileName);
+
+            SelectedFile = _selectedFiles.Dequeue();
 
             saveButton.Enabled = openFileDialog.FileName.Substring(openFileDialog.FileName.Length - 4, 4).ToLower() == PdfFileExtension;
         }
@@ -109,7 +138,7 @@ namespace Logistiek_Bonnensorteerder
 
             if (!File.Exists(configPath))
             {
-                Console.WriteLine("Configuration file not found!");
+                Console.WriteLine("Configuratiebestand niet gevonden!");
                 return;
             }
 
@@ -117,6 +146,7 @@ namespace Logistiek_Bonnensorteerder
             _config = JsonConvert.DeserializeObject<Config>(json);
 
             departmentDropdown.Items.Clear();
+            departmentDropdown.Items.Add("Ongespecificeerd");
             departmentDropdown.Items.AddRange(_config.departments);
 
             documentTypeDropdown.Items.Clear();
@@ -125,13 +155,40 @@ namespace Logistiek_Bonnensorteerder
 
         private void InitializeForm()
         {
-            saveButton.Enabled = false; 
-            openFileDialog.FileName = NoFileSelected;
+            saveButton.Enabled = false;
+            departmentDropdown.SelectedIndex = 0;
+        }
+
+        private void OnPostSave()
+        {
+            if (!_config.keepOriginalFile)
+            {
+                File.Delete(SelectedFile);
+            }
+
+            SelectedFile = NoFileSelected;
+
+            if (_selectedFiles.Count > 0)
+            {
+                SelectedFile = _selectedFiles.Dequeue();
+            }
+
+            orderNumberTextbox.Text = "";
+            pickbonTextbox.Text = "";
+
+            if (!HasFileSelected)
+            {
+                dateTimePicker.Value = DateTime.Now;
+                departmentDropdown.SelectedIndex = 0;
+                documentTypeDropdown.SelectedIndex = 0;
+                customerNameTextbox.Text = "";
+                transporterTextbox.Text = "";
+            }
         }
 
         private bool ValidateInput()
         {
-            if (openFileDialog.FileName == NoFileSelected)
+            if (SelectedFile == NoFileSelected)
             {
                 MessageBox.Show("Er is geen document geselecteerd.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
