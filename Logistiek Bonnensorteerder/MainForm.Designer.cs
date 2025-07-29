@@ -221,11 +221,12 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.saveButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Logistiek Bonnensorteerder";
+            this.Text = "Bonnard";
             this.ResumeLayout(false);
             this.PerformLayout();
 

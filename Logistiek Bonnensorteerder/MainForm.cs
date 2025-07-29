@@ -34,7 +34,10 @@ namespace Logistiek_Bonnensorteerder
             set
             {
                 _currentSelectedFile = value;
-                selectedDocumentPathLabel.Text = Regex.Split(_currentSelectedFile, "\\\\").Last(); ;
+                selectedDocumentPathLabel.Text = Regex.Split(_currentSelectedFile, "\\\\").Last();
+
+                if (_selectedFiles.Count > 0)
+                    selectedDocumentPathLabel.Text += $" (+{_selectedFiles.Count})";
             }
         }
 
@@ -67,8 +70,9 @@ namespace Logistiek_Bonnensorteerder
                 Directory.CreateDirectory(DestinationFolder);
                 try
                 {
-                    File.Copy(openFileDialog.FileName, DestinationFolder + GetResultFileName());
-                    OnPostSave();
+                    string targetName = DestinationFolder + GetResultFileName();
+                    File.Copy(openFileDialog.FileName, targetName);
+                    OnPostSave(targetName);
                 }
                 catch
                 {
@@ -159,7 +163,7 @@ namespace Logistiek_Bonnensorteerder
             departmentDropdown.SelectedIndex = 0;
         }
 
-        private void OnPostSave()
+        private void OnPostSave(string savedName)
         {
             if (!_config.keepOriginalFile)
             {
@@ -183,7 +187,16 @@ namespace Logistiek_Bonnensorteerder
                 documentTypeDropdown.SelectedIndex = 0;
                 customerNameTextbox.Text = "";
                 transporterTextbox.Text = "";
+
+                MessageBox.Show($"Bestand opgeslagen als '{savedName}'.", "Opgeslagen", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                fileSelectorButton.Enabled = true;
             }
+            else
+            {
+                MessageBox.Show($"Bestand opgeslagen als '{savedName}'.\nHet volgende bestand ({SelectedFile}) is nu geselecteerd; u kunt meteen verder gaan.", "Opgeslagen", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                fileSelectorButton.Enabled = false;
+            }
+
         }
 
         private bool ValidateInput()
