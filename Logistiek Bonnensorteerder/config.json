@@ -1,0 +1,14 @@
+{
+  "departments": [
+    "Department1",
+    "Department2",
+    "Department3"
+  ],
+  "documentTypes": [
+    "Type1",
+    "Type2",
+    "Type3"
+  ],
+  "destinationPathRoot": "C:\\Users\\tfalken\\Documents\\Bonnen",
+  "keepOriginalFile": true
+}
