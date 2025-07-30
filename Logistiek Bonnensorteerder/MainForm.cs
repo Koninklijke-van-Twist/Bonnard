@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PdfiumViewer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,6 @@ namespace Logistiek_Bonnensorteerder
 
         #region Properties
 
-        public bool HasFileSelected => _currentSelectedFile != NoFileSelected;
         public string DestinationFolder => $"{_config.destinationPathRoot}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
         public string SelectedFile
         {
@@ -38,6 +38,10 @@ namespace Logistiek_Bonnensorteerder
 
                 if (_selectedFiles.Count > 0)
                     selectedDocumentPathLabel.Text += $" (+{_selectedFiles.Count})";
+
+                ClearPDFPreview();
+                pdfViewer.Show();
+                pdfViewer.Document = PdfiumViewer.PdfDocument.Load(_currentSelectedFile);
             }
         }
 
@@ -77,7 +81,7 @@ namespace Logistiek_Bonnensorteerder
                 catch
                 {
                     MessageBox.Show("Er is een fout opgetreden. Het bestand is niet opgeslagen.\nMogelijk is dit document al eerder ingevoerd; controleer dit handmatig.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                }                
             }
         }
         private void fileSelectorButton_Click(object sender, EventArgs e)
@@ -92,7 +96,31 @@ namespace Logistiek_Bonnensorteerder
 
             SelectedFile = _selectedFiles.Dequeue();
 
+            fileSelectorButton.Enabled = false;
+            cancelAndRestartButton.Enabled = true;
             saveButton.Enabled = openFileDialog.FileName.Substring(openFileDialog.FileName.Length - 4, 4).ToLower() == PdfFileExtension;
+        }
+
+        private void cancelAndRestartButton_Click(object sender, EventArgs e)
+        {
+            cancelAndRestartButton.Enabled = false;
+
+            orderNumberTextbox.Text = "";
+            pickbonTextbox.Text = "";
+
+            dateTimePicker.Value = DateTime.Now;
+            departmentDropdown.SelectedIndex = 0;
+            documentTypeDropdown.SelectedIndex = 0;
+            customerNameTextbox.Text = "";
+            transporterTextbox.Text = "";
+
+            _selectedFiles.Clear();
+            selectedDocumentPathLabel.Text = NoFileSelected;
+
+            ClearPDFPreview();
+
+            fileSelectorButton.Enabled = true;
+            saveButton.Enabled = false;
         }
 
         #endregion
@@ -161,6 +189,7 @@ namespace Logistiek_Bonnensorteerder
         {
             saveButton.Enabled = false;
             departmentDropdown.SelectedIndex = 0;
+            documentTypeDropdown.SelectedIndex = 0;
         }
 
         private void OnPostSave(string savedName)
@@ -170,18 +199,21 @@ namespace Logistiek_Bonnensorteerder
                 File.Delete(SelectedFile);
             }
 
-            SelectedFile = NoFileSelected;
+            orderNumberTextbox.Text = "";
+            pickbonTextbox.Text = "";
 
             if (_selectedFiles.Count > 0)
             {
                 SelectedFile = _selectedFiles.Dequeue();
+                MessageBox.Show($"Bestand opgeslagen als '{savedName}'.\n\nHet volgende bestand is nu geselecteerd; u kunt meteen verder gaan.\n({SelectedFile})", "Opgeslagen", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                fileSelectorButton.Enabled = false;
+
+                cancelAndRestartButton.Enabled = true;
             }
-
-            orderNumberTextbox.Text = "";
-            pickbonTextbox.Text = "";
-
-            if (!HasFileSelected)
+            else
             {
+                saveButton.Enabled = false;
+                
                 dateTimePicker.Value = DateTime.Now;
                 departmentDropdown.SelectedIndex = 0;
                 documentTypeDropdown.SelectedIndex = 0;
@@ -190,13 +222,10 @@ namespace Logistiek_Bonnensorteerder
 
                 MessageBox.Show($"Bestand opgeslagen als '{savedName}'.", "Opgeslagen", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 fileSelectorButton.Enabled = true;
-            }
-            else
-            {
-                MessageBox.Show($"Bestand opgeslagen als '{savedName}'.\nHet volgende bestand ({SelectedFile}) is nu geselecteerd; u kunt meteen verder gaan.", "Opgeslagen", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                fileSelectorButton.Enabled = false;
-            }
+                cancelAndRestartButton.Enabled = false;
 
+                ClearPDFPreview();
+            }
         }
 
         private bool ValidateInput()
@@ -216,6 +245,15 @@ namespace Logistiek_Bonnensorteerder
             return true;
         }
 
+        private void ClearPDFPreview()
+        {
+            pdfViewer.Document?.Dispose();
+            pdfViewer.Document = null;
+            pdfViewer.Renderer.Invalidate();
+            pdfViewer.Hide();
+        }
+
         #endregion
+
     }
 }
