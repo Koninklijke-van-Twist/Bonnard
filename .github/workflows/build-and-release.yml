@@ -27,13 +27,10 @@ jobs:
         run: |
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" "Logistiek Bonnensorteerder.csproj" /p:Configuration=Release
 
-      - name: Publish app
-        working-directory: Logistiek Bonnensorteerder
-        run: dotnet publish -c Release -o publish
-
       - name: Zip output
         working-directory: Logistiek Bonnensorteerder
-        run: Compress-Archive -Path publish\* -DestinationPath ../../Bonnard.zip
+        run: |
+          Compress-Archive -Path bin\Release\* -DestinationPath ../../Bonnard.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
