@@ -51,6 +51,7 @@
             this.cancelAndRestartButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.editConfigButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -220,7 +221,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelAndRestartButton.Location = new System.Drawing.Point(12, 395);
             this.cancelAndRestartButton.Name = "cancelAndRestartButton";
-            this.cancelAndRestartButton.Size = new System.Drawing.Size(555, 23);
+            this.cancelAndRestartButton.Size = new System.Drawing.Size(525, 23);
             this.cancelAndRestartButton.TabIndex = 18;
             this.cancelAndRestartButton.Text = "Annuleren en opnieuw beginnen";
             this.cancelAndRestartButton.UseVisualStyleBackColor = true;
@@ -245,11 +246,22 @@
             this.panel1.Size = new System.Drawing.Size(255, 325);
             this.panel1.TabIndex = 20;
             // 
+            // editConfigButton
+            // 
+            this.editConfigButton.Location = new System.Drawing.Point(543, 395);
+            this.editConfigButton.Name = "editConfigButton";
+            this.editConfigButton.Size = new System.Drawing.Size(24, 23);
+            this.editConfigButton.TabIndex = 21;
+            this.editConfigButton.Text = "⚙";
+            this.editConfigButton.UseVisualStyleBackColor = true;
+            this.editConfigButton.Click += new System.EventHandler(this.editConfigButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(579, 430);
+            this.Controls.Add(this.editConfigButton);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.cancelAndRestartButton);
             this.Controls.Add(this.pdfViewer);
@@ -307,6 +319,7 @@
         private System.Windows.Forms.Button cancelAndRestartButton;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button editConfigButton;
     }
 }
 

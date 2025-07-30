@@ -23,7 +23,9 @@ namespace Logistiek_Bonnensorteerder
 
         #region Properties
 
-        public string DestinationFolder => $"{_config.destinationPathRoot}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
+        public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex]}{Environment.NewLine}", Environment.NewLine, "");
+        
+        public string DestinationFolder => $"{ConfigFile.destinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
         public string SelectedFile
         {
             get
@@ -49,7 +51,7 @@ namespace Logistiek_Bonnensorteerder
 
         #region Private Variables
 
-        private Config _config;
+        internal static Config ConfigFile;
         private Queue<string> _selectedFiles = new Queue<string>();
         private string _currentSelectedFile = "";
 
@@ -75,12 +77,12 @@ namespace Logistiek_Bonnensorteerder
                 try
                 {
                     string targetName = DestinationFolder + GetResultFileName();
-                    File.Copy(openFileDialog.FileName, targetName);
+                    File.Copy(SelectedFile, targetName);
                     OnPostSave(targetName);
                 }
                 catch
                 {
-                    MessageBox.Show("Er is een fout opgetreden. Het bestand is niet opgeslagen.\nMogelijk is dit document al eerder ingevoerd; controleer dit handmatig.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Er is een fout opgetreden. Het bestand is mogelijk niet opgeslagen.\nMogelijk is dit document al eerder ingevoerd; controleer dit handmatig.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }                
             }
         }
@@ -121,6 +123,13 @@ namespace Logistiek_Bonnensorteerder
 
             fileSelectorButton.Enabled = true;
             saveButton.Enabled = false;
+        }
+
+        private void editConfigButton_Click(object sender, EventArgs e)
+        {
+            ConfigForm configForm = new ConfigForm();
+            configForm.ShowDialog();
+            LoadConfigFile();
         }
 
         #endregion
@@ -175,14 +184,14 @@ namespace Logistiek_Bonnensorteerder
             }
 
             string json = File.ReadAllText(configPath);
-            _config = JsonConvert.DeserializeObject<Config>(json);
+            ConfigFile = JsonConvert.DeserializeObject<Config>(json);
 
             departmentDropdown.Items.Clear();
             departmentDropdown.Items.Add("Ongespecificeerd");
-            departmentDropdown.Items.AddRange(_config.departments);
+            departmentDropdown.Items.AddRange(ConfigFile.departments);
 
             documentTypeDropdown.Items.Clear();
-            documentTypeDropdown.Items.AddRange(_config.documentTypes);
+            documentTypeDropdown.Items.AddRange(ConfigFile.documentTypes);
         }
 
         private void InitializeForm()
@@ -194,8 +203,11 @@ namespace Logistiek_Bonnensorteerder
 
         private void OnPostSave(string savedName)
         {
-            if (!_config.keepOriginalFile)
+            selectedDocumentPathLabel.Text = "";
+
+            if (!ConfigFile.keepOriginalFile)
             {
+                ClearPDFPreview();
                 File.Delete(SelectedFile);
             }
 
@@ -254,6 +266,5 @@ namespace Logistiek_Bonnensorteerder
         }
 
         #endregion
-
     }
 }
