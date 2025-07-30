@@ -9,6 +9,7 @@
     <RootNamespace>Logistiek_Bonnensorteerder</RootNamespace>
     <AssemblyName>Bonnard</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
