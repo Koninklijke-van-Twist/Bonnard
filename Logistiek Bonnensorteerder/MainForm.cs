@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using PdfiumViewer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -100,6 +99,7 @@ namespace Logistiek_Bonnensorteerder
 
             fileSelectorButton.Enabled = false;
             cancelAndRestartButton.Enabled = true;
+            editConfigButton.Enabled = false;
             saveButton.Enabled = openFileDialog.FileName.Substring(openFileDialog.FileName.Length - 4, 4).ToLower() == PdfFileExtension;
         }
 
@@ -130,6 +130,7 @@ namespace Logistiek_Bonnensorteerder
             ConfigForm configForm = new ConfigForm();
             configForm.ShowDialog();
             LoadConfigFile();
+            InitializeForm();
         }
 
         #endregion
@@ -199,6 +200,9 @@ namespace Logistiek_Bonnensorteerder
             saveButton.Enabled = false;
             departmentDropdown.SelectedIndex = 0;
             documentTypeDropdown.SelectedIndex = 0;
+
+            departmentDropdown.SelectedItem = departmentDropdown.Items[0];
+            documentTypeDropdown.SelectedItem = documentTypeDropdown.Items[0];
         }
 
         private void OnPostSave(string savedName)
@@ -221,6 +225,7 @@ namespace Logistiek_Bonnensorteerder
                 fileSelectorButton.Enabled = false;
 
                 cancelAndRestartButton.Enabled = true;
+                editConfigButton.Enabled = false;
             }
             else
             {
@@ -235,6 +240,7 @@ namespace Logistiek_Bonnensorteerder
                 MessageBox.Show($"Bestand opgeslagen als '{savedName}'.", "Opgeslagen", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 fileSelectorButton.Enabled = true;
                 cancelAndRestartButton.Enabled = false;
+                editConfigButton.Enabled = true;
 
                 ClearPDFPreview();
             }
