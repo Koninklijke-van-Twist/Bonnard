@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
       - name: Checkout repository
@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'  # Pas aan als je een andere versie gebruikt
+          dotnet-version: "8.x" # Pas aan als je een andere versie gebruikt
 
       - name: Navigate to project folder
         working-directory: Logistiek Bonnensorteerder
