@@ -37,14 +37,15 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-      - name: Delete remote tag if exists
+      - name: Delete tag if it exists
+        shell: pwsh
         run: |
-          TAG=latest-release
-          if (git ls-remote --tags origin refs/tags/$TAG;) then
-            git push --delete origin $TAG
-          else
-            echo "Tag $TAG does not exist on remote, skipping deletion."
-          fi
+          $tag = "latest-release"
+          $tagExists = git ls-remote --tags origin "refs/tags/$tag"
+
+          if ($tagExists) {
+            git push --delete origin $tag
+          }
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
