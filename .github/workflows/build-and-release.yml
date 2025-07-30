@@ -30,7 +30,7 @@ jobs:
       - name: Zip output
         working-directory: Logistiek Bonnensorteerder
         run: |
-          Compress-Archive -Path bin\Release\* -DestinationPath ../../Bonnard.zip
+          Compress-Archive -Path bin\Release\* -DestinationPath ../Bonnard.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
