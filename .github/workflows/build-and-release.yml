@@ -37,7 +37,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-      - name: Delete tag if it exists
+      - name: Delete old tag if it exists
         shell: pwsh
         run: |
           $tag = "latest-release"
