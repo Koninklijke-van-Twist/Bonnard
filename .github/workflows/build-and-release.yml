@@ -40,7 +40,7 @@ jobs:
       - name: Delete remote tag if exists
         run: |
           TAG=latest-release
-          if git ls-remote --tags origin refs/tags/$TAG; then
+          if (git ls-remote --tags origin refs/tags/$TAG;) then
             git push --delete origin $TAG
           else
             echo "Tag $TAG does not exist on remote, skipping deletion."
