@@ -22,9 +22,13 @@ namespace Logistiek_Bonnensorteerder
 
         #region Properties
 
+        // Generate the folder name for the current file's document type
         public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex]}{Environment.NewLine}", Environment.NewLine, "");
         
+        // Generate the path name for the current file to be saved in, which includes the DocumentTypeFolderName and the date the user entered in the form.
         public string DestinationFolder => $"{ConfigFile.destinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
+        
+        // If the currently seleced file is changed, automatically reset some form elements and reset the PDF preview.
         public string SelectedFile
         {
             get
@@ -40,6 +44,7 @@ namespace Logistiek_Bonnensorteerder
                 if (_selectedFiles.Count > 0)
                     selectedDocumentPathLabel.Text += $" (+{_selectedFiles.Count})";
 
+                // We have to clear the PDF preview first, so that the current held file is properly disposed.
                 ClearPDFPreview();
                 pdfViewer.Show();
                 pdfViewer.Document = PdfiumViewer.PdfDocument.Load(_currentSelectedFile);
@@ -51,6 +56,8 @@ namespace Logistiek_Bonnensorteerder
         #region Private Variables
 
         internal static Config ConfigFile;
+
+        // When a user selects more than one file, they are placed in a queue to be handled one by one
         private Queue<string> _selectedFiles = new Queue<string>();
         private string _currentSelectedFile = "";
 
@@ -87,6 +94,7 @@ namespace Logistiek_Bonnensorteerder
         }
         private void fileSelectorButton_Click(object sender, EventArgs e)
         {
+            openFileDialog.Filter = "PDF Bestanden|*.pdf";
             openFileDialog.ShowDialog();
         }
 
@@ -137,6 +145,10 @@ namespace Logistiek_Bonnensorteerder
 
         #region Private Methods
 
+        /// <summary>
+        /// Generate a proper filename based on all input values for the currently selected file.
+        /// This includes a .pdf file extension.
+        /// </summary>
         private string GetResultFileName()
         {
             string result = "";
