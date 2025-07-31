@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.x" # Pas aan als je een andere versie gebruikt
+          dotnet-version: "8.x"
 
       - name: Restore dependencies
         working-directory: Logistiek Bonnensorteerder
@@ -80,6 +80,6 @@ jobs:
             ${{ env.RELEASE_NOTES }}
 
             When upgrading from an older release, make sure to back-up your config file.
-            If you encounter any issues, please report them to tfalken@kvt.nl
+            If you encounter any issues, please report them to ict@kvt.nl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
