@@ -77,8 +77,10 @@ jobs:
           files: Bonnard.zip
           tag_name: "release-${{ github.run_number }}"
           body: |
-            When upgrading from an older release, make sure to back-up your config file.
+            Release notes:
             ${{ env.RELEASE_NOTES }}
+
+            When upgrading from an older release, make sure to back-up your config file.
             If you encounter any issues, please report them to tfalken@kvt.nl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
