@@ -32,6 +32,44 @@ jobs:
         run: |
           Compress-Archive -Path bin\Release\* -DestinationPath ../Bonnard.zip
 
+      - name: Find merged PR
+        id: find_pr
+        uses: jwalton/gh-find-current-pr@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get PR body
+        id: pr_body
+        if: steps.find_pr.outputs.pr != ''
+        run: |
+          echo "PR_BODY<<EOF" >> $GITHUB_ENV
+          gh pr view ${{ steps.find_pr.outputs.pr }} --json body -q .body >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write changelog
+        id: changelog
+        run: |
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+
+          if [[ -n "${{ env.PR_BODY }}" ]]; then
+            # Try to extract from PR body
+            CL=$(echo "${{ env.PR_BODY }}" | awk '/## Changelog:/ {flag=1; next} /^## / {flag=0} flag')
+            if [[ -n "$CL" ]]; then
+              echo "$CL" >> $GITHUB_ENV
+            else
+              echo "No changelog section found in PR." >> $GITHUB_ENV
+            fi
+          else
+            echo "::notice ::No PR found, using latest commit message for changelog."
+            COMMIT_MSG=$(git log -1 --pretty=format:"%s%n%n%b")
+            echo "$COMMIT_MSG" >> $GITHUB_ENV
+          fi
+
+          echo "EOF" >> $GITHUB_ENV
+        shell: bash
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -40,6 +78,7 @@ jobs:
           tag_name: "release-${{ github.run_number }}"
           body: |
             When upgrading from an older release, make sure to back-up your config file.
-            Please test and report any issues to: tfalken@kvt.nl
+            ${{ env.RELEASE_NOTES }}
+            If you encounter any issues, please report them to tfalken@kvt.nl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
