@@ -54,7 +54,7 @@ jobs:
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
 
           if [[ -n "${{ env.PR_BODY }}" ]]; then
-            # Extract lines under "## Changelog:" until the next header or end of body
+            # Extract lines under "## Changelog:" until the next header or end of body.
             CL=$(echo "${{ env.PR_BODY }}" | awk '/## Changelog:/ {flag=1; next} /^## / {flag=0} flag')
             if [[ -n "$CL" ]]; then
               echo "$CL" >> $GITHUB_ENV
