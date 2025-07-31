@@ -54,17 +54,18 @@ jobs:
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
 
           if [[ -n "${{ env.PR_BODY }}" ]]; then
-            # Try to extract from PR body
+            # Extract lines under "## Changelog:" until the next header or end of body
             CL=$(echo "${{ env.PR_BODY }}" | awk '/## Changelog:/ {flag=1; next} /^## / {flag=0} flag')
             if [[ -n "$CL" ]]; then
               echo "$CL" >> $GITHUB_ENV
-            else
-              echo "No changelog section found in PR." >> $GITHUB_ENV
             fi
           else
-            echo "::notice ::No PR found, using latest commit message for changelog."
-            COMMIT_MSG=$(git log -1 --pretty=format:"%s%n%n%b")
-            echo "$COMMIT_MSG" >> $GITHUB_ENV
+            echo "::notice ::No PR found, using latest commit description for changelog."
+            # Get the body (description) of the latest commit ONLY
+            COMMIT_DESC=$(git log -1 --pretty=format:"%b")
+            if [[ -n "$COMMIT_DESC" ]]; then
+              echo "$COMMIT_DESC" >> $GITHUB_ENV
+            fi
           fi
 
           echo "EOF" >> $GITHUB_ENV
