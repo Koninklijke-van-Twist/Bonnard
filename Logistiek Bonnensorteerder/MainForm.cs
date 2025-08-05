@@ -276,7 +276,7 @@ namespace Logistiek_Bonnensorteerder
                 MessageBox.Show($"Bestand opgeslagen als '{savedName}'.", "Opgeslagen", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 fileSelectorButton.Enabled = true;
                 cancelAndRestartButton.Enabled = false;
-                editConfigButton.Enabled = true;
+                editConfigButton.Enabled = CanWriteToFile(ConfigFilePath);
 
                 ClearPDFPreview();
             }
