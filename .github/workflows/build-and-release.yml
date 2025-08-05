@@ -37,7 +37,7 @@ jobs:
       - name: Zip output
         working-directory: Logistiek Bonnensorteerder
         run: |
-          Compress-Archive -Path bin\Release\* -DestinationPath ../Bonnard.zip
+          Compress-Archive -Path bin\Release\* -DestinationPath ../Bonnard_r${{ github.run_number }}.zip
 
       - name: Find merged PR
         id: find_pr
