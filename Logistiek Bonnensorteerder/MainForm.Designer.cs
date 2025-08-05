@@ -206,6 +206,9 @@
             // 
             // pdfViewer
             // 
+            this.pdfViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pdfViewer.BackColor = System.Drawing.SystemColors.ControlDark;
             this.pdfViewer.Location = new System.Drawing.Point(312, 12);
             this.pdfViewer.Name = "pdfViewer";
@@ -248,6 +251,7 @@
             // 
             // editConfigButton
             // 
+            this.editConfigButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.editConfigButton.Location = new System.Drawing.Point(543, 395);
             this.editConfigButton.Name = "editConfigButton";
             this.editConfigButton.Size = new System.Drawing.Size(24, 23);
@@ -283,9 +287,9 @@
             this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(595, 469);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Bonnard";
