@@ -16,7 +16,7 @@ namespace Logistiek_Bonnensorteerder
         private const string PdfFileExtension = ".pdf";
 
         // Could have taken this from the Datetime object, but we want them to be consistent regardless of culture settings and include a number.
-        private static string[] months = { "01.januari", "02.februari" , "03.maart", "04.april", "05.mei", "06.juni", "07.juli", "08.augustus", "09.september", "10.october", "11.november", "12.december"};
+        private static string[] months = { "01. januari", "02. februari" , "03. maart", "04. april", "05. mei", "06. juni", "07. juli", "08. augustus", "09. september", "10. october", "11. november", "12. december"};
 
         #endregion
 
@@ -48,6 +48,31 @@ namespace Logistiek_Bonnensorteerder
                 ClearPDFPreview();
                 pdfViewer.Show();
                 pdfViewer.Document = PdfiumViewer.PdfDocument.Load(_currentSelectedFile);
+            }
+        }
+
+        public string ConfigFilePath => Path.Combine(AppContext.BaseDirectory, "config.json");
+
+        #endregion
+
+        #region Static Methods
+
+        public static bool CanWriteToFile(string filePath)
+        {
+            try
+            {
+                using (FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Write))
+                {
+                    return true;
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+            catch (IOException)
+            {
+                return false;
             }
         }
 
@@ -187,16 +212,13 @@ namespace Logistiek_Bonnensorteerder
 
         private void LoadConfigFile()
         {
-            string exeDirectory = AppContext.BaseDirectory;
-            string configPath = Path.Combine(exeDirectory, "config.json");
-
-            if (!File.Exists(configPath))
+            if (!File.Exists(ConfigFilePath))
             {
                 Console.WriteLine("Configuratiebestand niet gevonden!");
                 return;
             }
 
-            string json = File.ReadAllText(configPath);
+            string json = File.ReadAllText(ConfigFilePath);
             ConfigFile = JsonConvert.DeserializeObject<Config>(json);
 
             departmentDropdown.Items.Clear();
@@ -209,6 +231,8 @@ namespace Logistiek_Bonnensorteerder
 
         private void InitializeForm()
         {
+            editConfigButton.Enabled = CanWriteToFile(ConfigFilePath);
+
             saveButton.Enabled = false;
             departmentDropdown.SelectedIndex = 0;
             documentTypeDropdown.SelectedIndex = 0;
