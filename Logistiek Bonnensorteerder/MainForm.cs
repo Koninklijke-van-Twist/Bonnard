@@ -127,15 +127,7 @@ namespace Logistiek_Bonnensorteerder
 
         private void openFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            foreach(string fileName in openFileDialog.FileNames)
-                _selectedFiles.Enqueue(fileName);
-
-            SelectedFile = _selectedFiles.Dequeue();
-
-            fileSelectorButton.Enabled = false;
-            cancelAndRestartButton.Enabled = true;
-            editConfigButton.Enabled = false;
-            saveButton.Enabled = openFileDialog.FileName.Substring(openFileDialog.FileName.Length - 4, 4).ToLower() == PdfFileExtension;
+            HandleOpenedFiles(openFileDialog.FileNames);
         }
 
         private void cancelAndRestartButton_Click(object sender, EventArgs e)
@@ -166,6 +158,37 @@ namespace Logistiek_Bonnensorteerder
             configForm.ShowDialog();
             LoadConfigFile();
             InitializeForm();
+        }
+
+        private void releaseLabel_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/Koninklijke-van-Twist/Bonnard/releases");
+        }
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                bool hasPdf = files.Any(f => Path.GetExtension(f).Equals(".pdf", StringComparison.OrdinalIgnoreCase));
+
+                e.Effect = hasPdf ? DragDropEffects.Copy : DragDropEffects.None;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                IEnumerable<string> pdfFiles = files.Where(f => Path.GetExtension(f).Equals(".pdf", StringComparison.OrdinalIgnoreCase));
+
+                HandleOpenedFiles(pdfFiles.ToArray());
+            }
         }
 
         #endregion
@@ -210,6 +233,18 @@ namespace Logistiek_Bonnensorteerder
             result += $"_{documentTypeDropdown.SelectedItem as string}";
 
             return result + PdfFileExtension;
+        }
+        private void HandleOpenedFiles(string[] files)
+        {
+            foreach (string fileName in files)
+                _selectedFiles.Enqueue(fileName);
+
+            SelectedFile = _selectedFiles.Dequeue();
+
+            fileSelectorButton.Enabled = false;
+            cancelAndRestartButton.Enabled = true;
+            editConfigButton.Enabled = false;
+            saveButton.Enabled = openFileDialog.FileName.Substring(openFileDialog.FileName.Length - 4, 4).ToLower() == PdfFileExtension;
         }
 
         private void LoadConfigFile()
@@ -320,10 +355,5 @@ namespace Logistiek_Bonnensorteerder
         }
 
         #endregion
-
-        private void releaseLabel_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://github.com/Koninklijke-van-Twist/Bonnard/releases");
-        }
     }
 }
