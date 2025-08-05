@@ -81,7 +81,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: "Release - ${{ github.run_number }}"
-          files: Bonnard.zip
+          files: Bonnard_r${{ github.run_number }}.zip
           tag_name: "release-${{ github.run_number }}"
           body: |
             ${{ env.RELEASE_NOTES }}
