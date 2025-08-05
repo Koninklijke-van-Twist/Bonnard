@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -52,6 +53,7 @@ namespace Logistiek_Bonnensorteerder
         }
 
         public string ConfigFilePath => Path.Combine(AppContext.BaseDirectory, "config.json");
+        public string ReleaseNumberFilePath => Path.Combine(AppContext.BaseDirectory, "release.number");
 
         #endregion
 
@@ -239,6 +241,16 @@ namespace Logistiek_Bonnensorteerder
 
             departmentDropdown.SelectedItem = departmentDropdown.Items[0];
             documentTypeDropdown.SelectedItem = documentTypeDropdown.Items[0];
+
+            try
+            {
+                string releaseNumber = File.ReadAllText(ReleaseNumberFilePath);
+                releaseLabel.Text = releaseNumber;
+            }
+            catch
+            {
+                releaseLabel.Text = "onbekende release";
+            }
         }
 
         private void OnPostSave(string savedName)
@@ -308,5 +320,10 @@ namespace Logistiek_Bonnensorteerder
         }
 
         #endregion
+
+        private void releaseLabel_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/Koninklijke-van-Twist/Bonnard/releases");
+        }
     }
 }

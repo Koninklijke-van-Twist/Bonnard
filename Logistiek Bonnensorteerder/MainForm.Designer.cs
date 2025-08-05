@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.saveButton = new System.Windows.Forms.Button();
             this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
@@ -52,16 +53,17 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.editConfigButton = new System.Windows.Forms.Button();
+            this.releaseLabel = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // saveButton
             // 
-            this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.saveButton.Location = new System.Drawing.Point(12, 343);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(555, 50);
+            this.saveButton.Size = new System.Drawing.Size(291, 35);
             this.saveButton.TabIndex = 0;
             this.saveButton.Text = "Opslaan";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -214,17 +216,16 @@
             this.pdfViewer.Name = "pdfViewer";
             this.pdfViewer.ShowBookmarks = false;
             this.pdfViewer.ShowToolbar = false;
-            this.pdfViewer.Size = new System.Drawing.Size(254, 325);
+            this.pdfViewer.Size = new System.Drawing.Size(254, 406);
             this.pdfViewer.TabIndex = 17;
             this.pdfViewer.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitWidth;
             // 
             // cancelAndRestartButton
             // 
-            this.cancelAndRestartButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelAndRestartButton.Location = new System.Drawing.Point(12, 395);
+            this.cancelAndRestartButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cancelAndRestartButton.Location = new System.Drawing.Point(12, 384);
             this.cancelAndRestartButton.Name = "cancelAndRestartButton";
-            this.cancelAndRestartButton.Size = new System.Drawing.Size(525, 23);
+            this.cancelAndRestartButton.Size = new System.Drawing.Size(263, 23);
             this.cancelAndRestartButton.TabIndex = 18;
             this.cancelAndRestartButton.Text = "Annuleren en opnieuw beginnen";
             this.cancelAndRestartButton.UseVisualStyleBackColor = true;
@@ -246,13 +247,13 @@
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel1.Location = new System.Drawing.Point(312, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(255, 325);
+            this.panel1.Size = new System.Drawing.Size(255, 406);
             this.panel1.TabIndex = 20;
             // 
             // editConfigButton
             // 
-            this.editConfigButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.editConfigButton.Location = new System.Drawing.Point(543, 395);
+            this.editConfigButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.editConfigButton.Location = new System.Drawing.Point(279, 384);
             this.editConfigButton.Name = "editConfigButton";
             this.editConfigButton.Size = new System.Drawing.Size(24, 23);
             this.editConfigButton.TabIndex = 21;
@@ -260,11 +261,26 @@
             this.editConfigButton.UseVisualStyleBackColor = true;
             this.editConfigButton.Click += new System.EventHandler(this.editConfigButton_Click);
             // 
+            // releaseLabel
+            // 
+            this.releaseLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.releaseLabel.AutoSize = true;
+            this.releaseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.releaseLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.releaseLabel.Location = new System.Drawing.Point(12, 410);
+            this.releaseLabel.Name = "releaseLabel";
+            this.releaseLabel.Size = new System.Drawing.Size(98, 13);
+            this.releaseLabel.TabIndex = 22;
+            this.releaseLabel.Text = "onbekende release";
+            this.toolTip1.SetToolTip(this.releaseLabel, "Klik om online de releases in te zien");
+            this.releaseLabel.Click += new System.EventHandler(this.releaseLabel_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(579, 430);
+            this.Controls.Add(this.releaseLabel);
             this.Controls.Add(this.editConfigButton);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.cancelAndRestartButton);
@@ -324,6 +340,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button editConfigButton;
+        private System.Windows.Forms.Label releaseLabel;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

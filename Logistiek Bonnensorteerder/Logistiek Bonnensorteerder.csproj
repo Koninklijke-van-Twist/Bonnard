@@ -125,6 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="kvtlogo.ico" />
+    <None Include="release.number">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\logo-website-2-3.png" />
   </ItemGroup>
   <ItemGroup>
