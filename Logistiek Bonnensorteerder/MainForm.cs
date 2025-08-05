@@ -40,14 +40,20 @@ namespace Logistiek_Bonnensorteerder
             set
             {
                 _currentSelectedFile = value;
-                selectedDocumentPathLabel.Text = Regex.Split(_currentSelectedFile, "\\\\").Last();
 
-                if (_selectedFiles.Count > 0)
-                    selectedDocumentPathLabel.Text += $" (+{_selectedFiles.Count})";
+                UpdateFileSelectedLabel();
 
                 // We have to clear the PDF preview first, so that the current held file is properly disposed.
-                ClearPDFPreview();
-                pdfViewer.Show();
+                if (value != NoFileSelected)
+                {
+                    ClearPDFPreview();
+                    pdfViewer.Show();
+                }
+                else
+                {
+                    pdfViewer.Hide();
+                }
+                    
                 pdfViewer.Document = PdfiumViewer.PdfDocument.Load(_currentSelectedFile);
             }
         }
@@ -86,7 +92,7 @@ namespace Logistiek_Bonnensorteerder
 
         // When a user selects more than one file, they are placed in a queue to be handled one by one
         private Queue<string> _selectedFiles = new Queue<string>();
-        private string _currentSelectedFile = "";
+        private string _currentSelectedFile = NoFileSelected;
 
         #endregion
 
@@ -170,7 +176,7 @@ namespace Logistiek_Bonnensorteerder
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                bool hasPdf = files.Any(f => Path.GetExtension(f).Equals(".pdf", StringComparison.OrdinalIgnoreCase));
+                bool hasPdf = files.Any(f => Path.GetExtension(f).Equals(".pdf", StringComparison.OrdinalIgnoreCase) && !_selectedFiles.Contains(f) && SelectedFile != f);
 
                 e.Effect = hasPdf ? DragDropEffects.Copy : DragDropEffects.None;
             }
@@ -185,7 +191,7 @@ namespace Logistiek_Bonnensorteerder
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                IEnumerable<string> pdfFiles = files.Where(f => Path.GetExtension(f).Equals(".pdf", StringComparison.OrdinalIgnoreCase));
+                IEnumerable<string> pdfFiles = files.Where(f => Path.GetExtension(f).Equals(PdfFileExtension, StringComparison.OrdinalIgnoreCase));
 
                 HandleOpenedFiles(pdfFiles.ToArray());
             }
@@ -237,14 +243,34 @@ namespace Logistiek_Bonnensorteerder
         private void HandleOpenedFiles(string[] files)
         {
             foreach (string fileName in files)
-                _selectedFiles.Enqueue(fileName);
+            {
+                if (!_selectedFiles.Contains(fileName) && SelectedFile != fileName)
+                {
+                    _selectedFiles.Enqueue(fileName);
+                }
+            }
 
-            SelectedFile = _selectedFiles.Dequeue();
+            if (SelectedFile == NoFileSelected)
+            {
+                SelectedFile = _selectedFiles.Dequeue();
+            }
+            else
+            {
+                UpdateFileSelectedLabel();
+            }
 
             fileSelectorButton.Enabled = false;
             cancelAndRestartButton.Enabled = true;
             editConfigButton.Enabled = false;
-            saveButton.Enabled = openFileDialog.FileName.Substring(openFileDialog.FileName.Length - 4, 4).ToLower() == PdfFileExtension;
+            saveButton.Enabled = Path.GetExtension(SelectedFile) == PdfFileExtension;
+        }
+
+        private void UpdateFileSelectedLabel()
+        {
+            selectedDocumentPathLabel.Text = Regex.Split(_currentSelectedFile, "\\\\").Last();
+
+            if (_selectedFiles.Count > 0)
+                selectedDocumentPathLabel.Text += $" (+{_selectedFiles.Count})";
         }
 
         private void LoadConfigFile()
@@ -326,6 +352,7 @@ namespace Logistiek_Bonnensorteerder
                 editConfigButton.Enabled = CanWriteToFile(ConfigFilePath);
 
                 ClearPDFPreview();
+                _currentSelectedFile = NoFileSelected;
             }
         }
 
