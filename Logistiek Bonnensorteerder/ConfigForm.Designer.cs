@@ -29,57 +29,22 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
-            this.departmentsConfigInput = new System.Windows.Forms.TextBox();
-            this.departmentsConfigLabel = new System.Windows.Forms.Label();
-            this.documentTypesConfigInput = new System.Windows.Forms.TextBox();
-            this.documentTypesConfigLabel = new System.Windows.Forms.Label();
             this.saveConfigButton = new System.Windows.Forms.Button();
             this.rootFolderTextfield = new System.Windows.Forms.TextBox();
             this.saveOriginalFileCheckbox = new System.Windows.Forms.CheckBox();
-            this.departmentListLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.documentTypesBox = new System.Windows.Forms.GroupBox();
+            this.departmentsBox = new System.Windows.Forms.GroupBox();
+            this.departmentsPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.documentTypesPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.addDepartmentButton = new System.Windows.Forms.Button();
+            this.addDocumentTypeButton = new System.Windows.Forms.Button();
+            this.documentTypesBox.SuspendLayout();
+            this.departmentsBox.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // departmentsConfigInput
-            // 
-            this.departmentsConfigInput.Location = new System.Drawing.Point(12, 40);
-            this.departmentsConfigInput.Multiline = true;
-            this.departmentsConfigInput.Name = "departmentsConfigInput";
-            this.departmentsConfigInput.Size = new System.Drawing.Size(153, 398);
-            this.departmentsConfigInput.TabIndex = 0;
-            this.departmentsConfigInput.TextChanged += new System.EventHandler(this.departmentsConfigInput_TextChanged);
-            // 
-            // departmentsConfigLabel
-            // 
-            this.departmentsConfigLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.departmentsConfigLabel.Location = new System.Drawing.Point(171, 40);
-            this.departmentsConfigLabel.Name = "departmentsConfigLabel";
-            this.departmentsConfigLabel.Size = new System.Drawing.Size(145, 398);
-            this.departmentsConfigLabel.TabIndex = 1;
-            this.departmentsConfigLabel.Text = "Departments";
-            // 
-            // documentTypesConfigInput
-            // 
-            this.documentTypesConfigInput.Location = new System.Drawing.Point(322, 40);
-            this.documentTypesConfigInput.Multiline = true;
-            this.documentTypesConfigInput.Name = "documentTypesConfigInput";
-            this.documentTypesConfigInput.Size = new System.Drawing.Size(153, 398);
-            this.documentTypesConfigInput.TabIndex = 2;
-            this.documentTypesConfigInput.TextChanged += new System.EventHandler(this.departmentsConfigInput_TextChanged);
-            // 
-            // documentTypesConfigLabel
-            // 
-            this.documentTypesConfigLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.documentTypesConfigLabel.Location = new System.Drawing.Point(481, 40);
-            this.documentTypesConfigLabel.Name = "documentTypesConfigLabel";
-            this.documentTypesConfigLabel.Size = new System.Drawing.Size(145, 398);
-            this.documentTypesConfigLabel.TabIndex = 3;
-            this.documentTypesConfigLabel.Text = "Document Types";
-            this.documentTypesConfigLabel.Click += new System.EventHandler(this.documentTypesConfigLabel_Click);
             // 
             // saveConfigButton
             // 
-            this.saveConfigButton.Location = new System.Drawing.Point(509, 441);
+            this.saveConfigButton.Location = new System.Drawing.Point(515, 437);
             this.saveConfigButton.Name = "saveConfigButton";
             this.saveConfigButton.Size = new System.Drawing.Size(117, 41);
             this.saveConfigButton.TabIndex = 4;
@@ -91,7 +56,7 @@
             // 
             this.rootFolderTextfield.Location = new System.Drawing.Point(12, 441);
             this.rootFolderTextfield.Name = "rootFolderTextfield";
-            this.rootFolderTextfield.Size = new System.Drawing.Size(491, 20);
+            this.rootFolderTextfield.Size = new System.Drawing.Size(497, 20);
             this.rootFolderTextfield.TabIndex = 5;
             this.rootFolderTextfield.Leave += new System.EventHandler(this.rootFolderTextfield_TextChanged);
             // 
@@ -106,58 +71,93 @@
             this.saveOriginalFileCheckbox.UseVisualStyleBackColor = true;
             this.saveOriginalFileCheckbox.CheckedChanged += new System.EventHandler(this.saveOriginalFileCheckbox_CheckedChanged);
             // 
-            // departmentListLabel
+            // documentTypesBox
             // 
-            this.departmentListLabel.AutoSize = true;
-            this.departmentListLabel.Location = new System.Drawing.Point(12, 24);
-            this.departmentListLabel.Name = "departmentListLabel";
-            this.departmentListLabel.Size = new System.Drawing.Size(128, 13);
-            this.departmentListLabel.TabIndex = 7;
-            this.departmentListLabel.Text = "Afdelingen (één per regel)";
+            this.documentTypesBox.Controls.Add(this.addDocumentTypeButton);
+            this.documentTypesBox.Controls.Add(this.documentTypesPanel);
+            this.documentTypesBox.Location = new System.Drawing.Point(325, 9);
+            this.documentTypesBox.Name = "documentTypesBox";
+            this.documentTypesBox.Size = new System.Drawing.Size(307, 426);
+            this.documentTypesBox.TabIndex = 9;
+            this.documentTypesBox.TabStop = false;
+            this.documentTypesBox.Text = "Documenttypes";
             // 
-            // label1
+            // departmentsBox
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(319, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(152, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Documenttypes (één per regel)";
+            this.departmentsBox.Controls.Add(this.addDepartmentButton);
+            this.departmentsBox.Controls.Add(this.departmentsPanel);
+            this.departmentsBox.Location = new System.Drawing.Point(12, 9);
+            this.departmentsBox.Name = "departmentsBox";
+            this.departmentsBox.Size = new System.Drawing.Size(307, 426);
+            this.departmentsBox.TabIndex = 10;
+            this.departmentsBox.TabStop = false;
+            this.departmentsBox.Text = "Afdelingen";
+            // 
+            // departmentsPanel
+            // 
+            this.departmentsPanel.Location = new System.Drawing.Point(6, 19);
+            this.departmentsPanel.Name = "departmentsPanel";
+            this.departmentsPanel.Size = new System.Drawing.Size(295, 401);
+            this.departmentsPanel.TabIndex = 0;
+            // 
+            // documentTypesPanel
+            // 
+            this.documentTypesPanel.Location = new System.Drawing.Point(6, 19);
+            this.documentTypesPanel.Name = "documentTypesPanel";
+            this.documentTypesPanel.Size = new System.Drawing.Size(295, 401);
+            this.documentTypesPanel.TabIndex = 1;
+            // 
+            // addDepartmentButton
+            // 
+            this.addDepartmentButton.Location = new System.Drawing.Point(281, -1);
+            this.addDepartmentButton.Name = "addDepartmentButton";
+            this.addDepartmentButton.Size = new System.Drawing.Size(23, 23);
+            this.addDepartmentButton.TabIndex = 1;
+            this.addDepartmentButton.Text = "✚";
+            this.addDepartmentButton.UseVisualStyleBackColor = true;
+            this.addDepartmentButton.Click += new System.EventHandler(this.addDepartmentButton_Click);
+            // 
+            // addDocumentTypeButton
+            // 
+            this.addDocumentTypeButton.Location = new System.Drawing.Point(283, -1);
+            this.addDocumentTypeButton.Name = "addDocumentTypeButton";
+            this.addDocumentTypeButton.Size = new System.Drawing.Size(23, 23);
+            this.addDocumentTypeButton.TabIndex = 2;
+            this.addDocumentTypeButton.Text = "✚";
+            this.addDocumentTypeButton.UseVisualStyleBackColor = true;
+            this.addDocumentTypeButton.Click += new System.EventHandler(this.addDocumentTypeButton_Click);
             // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 490);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.departmentListLabel);
+            this.ClientSize = new System.Drawing.Size(646, 490);
+            this.Controls.Add(this.departmentsBox);
+            this.Controls.Add(this.documentTypesBox);
             this.Controls.Add(this.saveOriginalFileCheckbox);
             this.Controls.Add(this.rootFolderTextfield);
             this.Controls.Add(this.saveConfigButton);
-            this.Controls.Add(this.documentTypesConfigLabel);
-            this.Controls.Add(this.documentTypesConfigInput);
-            this.Controls.Add(this.departmentsConfigLabel);
-            this.Controls.Add(this.departmentsConfigInput);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "ConfigForm";
             this.Text = "ConfigForm";
+            this.documentTypesBox.ResumeLayout(false);
+            this.departmentsBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox departmentsConfigInput;
-        private System.Windows.Forms.Label departmentsConfigLabel;
-        private System.Windows.Forms.TextBox documentTypesConfigInput;
-        private System.Windows.Forms.Label documentTypesConfigLabel;
         private System.Windows.Forms.Button saveConfigButton;
         private System.Windows.Forms.TextBox rootFolderTextfield;
         private System.Windows.Forms.CheckBox saveOriginalFileCheckbox;
-        private System.Windows.Forms.Label departmentListLabel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox documentTypesBox;
+        private System.Windows.Forms.GroupBox departmentsBox;
+        private System.Windows.Forms.FlowLayoutPanel documentTypesPanel;
+        private System.Windows.Forms.FlowLayoutPanel departmentsPanel;
+        private System.Windows.Forms.Button addDocumentTypeButton;
+        private System.Windows.Forms.Button addDepartmentButton;
     }
 }

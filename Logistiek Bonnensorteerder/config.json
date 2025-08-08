@@ -1,13 +1,37 @@
 {
   "departments": [
-    "Department1",
-    "Department2",
-    "Department3"
+    {
+      "name": "Department1",
+      "allowedEntries": {},
+      "requiredEntries": {}
+    },
+    {
+      "name": "Department2",
+      "allowedEntries": {},
+      "requiredEntries": {}
+    },
+    {
+      "name": "Department3",
+      "allowedEntries": {},
+      "requiredEntries": {}
+    }
   ],
   "documentTypes": [
-    "Type1",
-    "Type2",
-    "Type3"
+    {
+      "name": "Type1",
+      "allowedEntries": {},
+      "requiredEntries": {}
+    },
+    {
+      "name": "Type2",
+      "allowedEntries": {},
+      "requiredEntries": {}
+    },
+    {
+      "name": "Type3",
+      "allowedEntries": {},
+      "requiredEntries": {}
+    }
   ],
   "destinationPathRoot": "C:\\Users\\tfalken\\Documents\\Bonnen",
   "keepOriginalFile": true

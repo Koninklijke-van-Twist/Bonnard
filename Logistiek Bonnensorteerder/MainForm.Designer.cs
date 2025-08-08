@@ -34,15 +34,15 @@
             this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.departmentDropdown = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.departmentLabel = new System.Windows.Forms.Label();
             this.orderNumberTextbox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.orderNumberLabel = new System.Windows.Forms.Label();
             this.pickbonTextbox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.pickbonLabel = new System.Windows.Forms.Label();
             this.customerNameTextbox = new System.Windows.Forms.TextBox();
             this.transporterTextbox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.customerNameLabel = new System.Windows.Forms.Label();
+            this.transporterNameLabel = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.documentTypeDropdown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -79,6 +79,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(9, 135);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 13);
@@ -92,15 +93,16 @@
             this.departmentDropdown.Name = "departmentDropdown";
             this.departmentDropdown.Size = new System.Drawing.Size(181, 21);
             this.departmentDropdown.TabIndex = 3;
+            this.departmentDropdown.SelectedIndexChanged += new System.EventHandler(this.departmentDropdown_SelectedIndexChanged);
             // 
-            // label2
+            // departmentLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 158);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Afdeling";
+            this.departmentLabel.AutoSize = true;
+            this.departmentLabel.Location = new System.Drawing.Point(9, 158);
+            this.departmentLabel.Name = "departmentLabel";
+            this.departmentLabel.Size = new System.Drawing.Size(45, 13);
+            this.departmentLabel.TabIndex = 4;
+            this.departmentLabel.Text = "Afdeling";
             // 
             // orderNumberTextbox
             // 
@@ -109,14 +111,14 @@
             this.orderNumberTextbox.Size = new System.Drawing.Size(181, 20);
             this.orderNumberTextbox.TabIndex = 5;
             // 
-            // label3
+            // orderNumberLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 185);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(107, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Termijnorder Nummer";
+            this.orderNumberLabel.AutoSize = true;
+            this.orderNumberLabel.Location = new System.Drawing.Point(9, 185);
+            this.orderNumberLabel.Name = "orderNumberLabel";
+            this.orderNumberLabel.Size = new System.Drawing.Size(107, 13);
+            this.orderNumberLabel.TabIndex = 6;
+            this.orderNumberLabel.Text = "Termijnorder Nummer";
             // 
             // pickbonTextbox
             // 
@@ -125,14 +127,14 @@
             this.pickbonTextbox.Size = new System.Drawing.Size(181, 20);
             this.pickbonTextbox.TabIndex = 7;
             // 
-            // label4
+            // pickbonLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 211);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(88, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Pickbon Nummer";
+            this.pickbonLabel.AutoSize = true;
+            this.pickbonLabel.Location = new System.Drawing.Point(9, 211);
+            this.pickbonLabel.Name = "pickbonLabel";
+            this.pickbonLabel.Size = new System.Drawing.Size(88, 13);
+            this.pickbonLabel.TabIndex = 8;
+            this.pickbonLabel.Text = "Pickbon Nummer";
             // 
             // customerNameTextbox
             // 
@@ -148,27 +150,28 @@
             this.transporterTextbox.Size = new System.Drawing.Size(181, 20);
             this.transporterTextbox.TabIndex = 10;
             // 
-            // label5
+            // customerNameLabel
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 237);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 13);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "Klantnaam";
+            this.customerNameLabel.AutoSize = true;
+            this.customerNameLabel.Location = new System.Drawing.Point(9, 237);
+            this.customerNameLabel.Name = "customerNameLabel";
+            this.customerNameLabel.Size = new System.Drawing.Size(57, 13);
+            this.customerNameLabel.TabIndex = 11;
+            this.customerNameLabel.Text = "Klantnaam";
             // 
-            // label6
+            // transporterNameLabel
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 263);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Transporteur";
+            this.transporterNameLabel.AutoSize = true;
+            this.transporterNameLabel.Location = new System.Drawing.Point(9, 263);
+            this.transporterNameLabel.Name = "transporterNameLabel";
+            this.transporterNameLabel.Size = new System.Drawing.Size(67, 13);
+            this.transporterNameLabel.TabIndex = 12;
+            this.transporterNameLabel.Text = "Transporteur";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(9, 290);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(76, 13);
@@ -182,6 +185,7 @@
             this.documentTypeDropdown.Name = "documentTypeDropdown";
             this.documentTypeDropdown.Size = new System.Drawing.Size(181, 21);
             this.documentTypeDropdown.TabIndex = 14;
+            this.documentTypeDropdown.SelectedIndexChanged += new System.EventHandler(this.documentTypeDropdown_SelectedIndexChanged);
             // 
             // openFileDialog
             // 
@@ -290,15 +294,15 @@
             this.Controls.Add(this.fileSelectorButton);
             this.Controls.Add(this.documentTypeDropdown);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.transporterNameLabel);
+            this.Controls.Add(this.customerNameLabel);
             this.Controls.Add(this.transporterTextbox);
             this.Controls.Add(this.customerNameTextbox);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.pickbonLabel);
             this.Controls.Add(this.pickbonTextbox);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.orderNumberLabel);
             this.Controls.Add(this.orderNumberTextbox);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.departmentLabel);
             this.Controls.Add(this.departmentDropdown);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dateTimePicker);
@@ -323,15 +327,15 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox departmentDropdown;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label departmentLabel;
         private System.Windows.Forms.TextBox orderNumberTextbox;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label orderNumberLabel;
         private System.Windows.Forms.TextBox pickbonTextbox;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label pickbonLabel;
         private System.Windows.Forms.TextBox customerNameTextbox;
         private System.Windows.Forms.TextBox transporterTextbox;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label customerNameLabel;
+        private System.Windows.Forms.Label transporterNameLabel;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox documentTypeDropdown;
         private System.Windows.Forms.OpenFileDialog openFileDialog;

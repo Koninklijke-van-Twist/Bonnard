@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static Logistiek_Bonnensorteerder.Config;
 
 namespace Logistiek_Bonnensorteerder
 {
@@ -27,7 +29,7 @@ namespace Logistiek_Bonnensorteerder
         #region Properties
 
         // Generate the folder name for the current file's document type
-        public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex]}{Environment.NewLine}", Environment.NewLine, "");
+        public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].name}{Environment.NewLine}", Environment.NewLine, "");
         
         // Generate the path name for the current file to be saved in, which includes the DocumentTypeFolderName and the date the user entered in the form.
         public string DestinationFolder => $"{ConfigFile.DestinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
@@ -159,6 +161,7 @@ namespace Logistiek_Bonnensorteerder
 
             fileSelectorButton.Enabled = true;
             saveButton.Enabled = false;
+            SetAllowedRequiredElements();
         }
 
         private void editConfigButton_Click(object sender, EventArgs e)
@@ -240,6 +243,16 @@ namespace Logistiek_Bonnensorteerder
             }
         }
 
+        private void departmentDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetAllowedRequiredElements();
+        }
+
+        private void documentTypeDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetAllowedRequiredElements();
+        }
+
         #endregion
 
         #region Private Methods
@@ -283,6 +296,41 @@ namespace Logistiek_Bonnensorteerder
 
             return result + PdfFileExtension;
         }
+
+        private void SetAllowedRequiredElements()
+        {
+            try
+            {
+                RestrictableListEntry department = departmentDropdown.SelectedIndex - 1 >= 0? ConfigFile.departments[departmentDropdown.SelectedIndex - 1] : new RestrictableListEntry(); // account fo runspecified
+                RestrictableListEntry documentType = ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex];
+
+                department.FixDictionaries();
+                documentType.FixDictionaries();
+
+                departmentDropdown.Enabled = department.allowedEntries["department"] && documentType.allowedEntries["department"];
+                orderNumberTextbox.Enabled = department.allowedEntries["orderNumber"] && documentType.allowedEntries["orderNumber"];
+                pickbonTextbox.Enabled = department.allowedEntries["pickbon"] && documentType.allowedEntries["pickbon"];
+                customerNameTextbox.Enabled = department.allowedEntries["customerName"] && documentType.allowedEntries["customerName"];
+                transporterTextbox.Enabled = department.allowedEntries["transporterName"] && documentType.allowedEntries["transporterName"];
+
+                if (!departmentDropdown.Enabled) departmentDropdown.SelectedIndex = 0;
+                if (!orderNumberTextbox.Enabled) orderNumberTextbox.Text = "";
+                if (!pickbonTextbox.Enabled) pickbonTextbox.Text = "";
+                if (!customerNameTextbox.Enabled) customerNameTextbox.Text = "";
+                if (!transporterTextbox.Enabled) transporterTextbox.Text = "";
+
+                departmentLabel.Font = new Font(departmentLabel.Font, department.requiredEntries["department"] || documentType.requiredEntries["department"] ? FontStyle.Underline : FontStyle.Regular);
+                orderNumberLabel.Font = new Font(orderNumberLabel.Font, department.requiredEntries["orderNumber"] || documentType.requiredEntries["orderNumber"] ? FontStyle.Underline : FontStyle.Regular);
+                pickbonLabel.Font = new Font(pickbonLabel.Font, department.requiredEntries["pickbon"] || documentType.requiredEntries["pickbon"] ? FontStyle.Underline : FontStyle.Regular);
+                customerNameLabel.Font = new Font(customerNameLabel.Font, department.requiredEntries["customerName"] || documentType.requiredEntries["customerName"] ? FontStyle.Underline : FontStyle.Regular);
+                transporterNameLabel.Font = new Font(transporterNameLabel.Font, department.requiredEntries["transporterName"] || documentType.requiredEntries["transporterName"] ? FontStyle.Underline : FontStyle.Regular);
+            }
+            catch
+            {
+                Console.WriteLine("Index out of range (likely initializing)");
+            }
+        }
+
         private void HandleOpenedFiles(string[] files)
         {
             foreach (string fileName in files)
@@ -329,10 +377,10 @@ namespace Logistiek_Bonnensorteerder
 
             departmentDropdown.Items.Clear();
             departmentDropdown.Items.Add("Ongespecificeerd");
-            departmentDropdown.Items.AddRange(ConfigFile.departments);
+            departmentDropdown.Items.AddRange(ConfigFile.departments.Select(o => o.name).ToArray());
 
             documentTypeDropdown.Items.Clear();
-            documentTypeDropdown.Items.AddRange(ConfigFile.documentTypes);
+            documentTypeDropdown.Items.AddRange(ConfigFile.documentTypes.Select(o => o.name).ToArray());
         }
 
         private bool OutlookContainsPdf(IDataObject data)
@@ -422,6 +470,8 @@ namespace Logistiek_Bonnensorteerder
             {
                 releaseLabel.Text = "onbekende release";
             }
+
+            SetAllowedRequiredElements();
         }
 
         private void OnPostSave(string savedName)
@@ -463,11 +513,37 @@ namespace Logistiek_Bonnensorteerder
 
                 ClearPDFPreview();
                 _currentSelectedFile = NoFileSelected;
+                SetAllowedRequiredElements();
             }
         }
 
         private bool ValidateInput()
         {
+            bool anyNotMet = false;
+            RestrictableListEntry department = departmentDropdown.SelectedIndex - 1 >= 0 ? ConfigFile.departments[departmentDropdown.SelectedIndex - 1] : new RestrictableListEntry(); // account fo runspecified
+            RestrictableListEntry documentType = ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex];
+
+            department.FixDictionaries();
+            documentType.FixDictionaries();
+
+            if (department.requiredEntries["department"] && departmentDropdown.SelectedIndex == 0) anyNotMet = true;
+            if (department.requiredEntries["orderNumber"] && orderNumberTextbox.Text.Length == 0) anyNotMet = true;
+            if (department.requiredEntries["pickbon"] && pickbonTextbox.Text.Length == 0) anyNotMet = true;
+            if (department.requiredEntries["customerName"] && customerNameTextbox.Text.Length == 0) anyNotMet = true;
+            if (department.requiredEntries["transporterName"] && transporterTextbox.Text.Length == 0) anyNotMet = true;
+
+            if (documentType.requiredEntries["department"] && departmentDropdown.SelectedIndex == 0) anyNotMet = true;
+            if (documentType.requiredEntries["orderNumber"] && orderNumberTextbox.Text.Length == 0) anyNotMet = true;
+            if (documentType.requiredEntries["pickbon"] && pickbonTextbox.Text.Length == 0) anyNotMet = true;
+            if (documentType.requiredEntries["customerName"] && customerNameTextbox.Text.Length == 0) anyNotMet = true;
+            if (documentType.requiredEntries["transporterName"] && transporterTextbox.Text.Length == 0) anyNotMet = true;
+
+            if (anyNotMet)
+            {
+                MessageBox.Show("Één of meerdere vereiste velden zijn niet ingevuld.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             if (SelectedFile == NoFileSelected)
             {
                 MessageBox.Show("Er is geen document geselecteerd.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
