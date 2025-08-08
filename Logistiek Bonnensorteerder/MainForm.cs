@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -173,12 +174,24 @@ namespace Logistiek_Bonnensorteerder
 
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if ((string[])e.Data.GetData(DataFormats.FileDrop) is string[] files)
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                bool hasPdf = files.Any(f => Path.GetExtension(f).Equals(".pdf", StringComparison.OrdinalIgnoreCase) && !_selectedFiles.Contains(f) && SelectedFile != f);
+                bool hasPdf = files.Any(f => Path.GetExtension(f).Equals(PdfFileExtension, StringComparison.OrdinalIgnoreCase)
+                                             && !_selectedFiles.Contains(f) && SelectedFile != f);
 
                 e.Effect = hasPdf ? DragDropEffects.Copy : DragDropEffects.None;
+            }
+            else if (e.Data.GetDataPresent("FileGroupDescriptor"))
+            {
+                // This is likely an Outlook attachment
+                if (OutlookContainsPdf(e.Data))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
             }
             else
             {
@@ -192,8 +205,16 @@ namespace Logistiek_Bonnensorteerder
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 IEnumerable<string> pdfFiles = files.Where(f => Path.GetExtension(f).Equals(PdfFileExtension, StringComparison.OrdinalIgnoreCase));
-
                 HandleOpenedFiles(pdfFiles.ToArray());
+            }
+            else if (e.Data.GetDataPresent("FileGroupDescriptor"))
+            {
+                // Handle Outlook attachments
+                List<string> savedPdfPaths = SavePdfAttachmentsFromOutlook(e.Data);
+                if (savedPdfPaths.Any())
+                {
+                    HandleOpenedFiles(savedPdfPaths.ToArray());
+                }
             }
         }
 
@@ -291,6 +312,73 @@ namespace Logistiek_Bonnensorteerder
             documentTypeDropdown.Items.Clear();
             documentTypeDropdown.Items.AddRange(ConfigFile.documentTypes);
         }
+
+        private bool OutlookContainsPdf(IDataObject data)
+        {
+            List<string> names = GetOutlookAttachmentNames(data);
+            return names.Any(name => Path.GetExtension(name).Equals(PdfFileExtension, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private List<string> SavePdfAttachmentsFromOutlook(IDataObject data)
+        {
+            List<string> savedFiles = new List<string>();
+            List<string> fileNames = GetOutlookAttachmentNames(data);
+
+            for (int i = 0; i < fileNames.Count; i++)
+            {
+                string name = fileNames[i];
+                if (Path.GetExtension(name).Equals(PdfFileExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    Stream stream = GetOutlookAttachmentStream(data, i);
+
+                    string tempFilePath = Path.Combine(Path.GetTempPath(), name);
+                    using (FileStream output = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        stream.CopyTo(output);
+                    }
+
+                    savedFiles.Add(tempFilePath);
+                }
+            }
+
+            return savedFiles;
+        }
+
+        private List<string> GetOutlookAttachmentNames(IDataObject data)
+        {
+            List<string> result = new List<string>();
+
+            MemoryStream fileGroupDescriptorStream = (MemoryStream)data.GetData("FileGroupDescriptor");
+            byte[] buffer = new byte[fileGroupDescriptorStream.Length];
+            fileGroupDescriptorStream.Read(buffer, 0, buffer.Length);
+
+            int fileCount = BitConverter.ToInt32(buffer, 0);
+            for (int i = 0; i < fileCount; i++)
+            {
+                int offset = 76 + (i * 592); // FILEDESCRIPTOR struct size
+                string name = Encoding.Default.GetString(buffer, offset, 260).TrimEnd('\0');
+                result.Add(name);
+            }
+
+            return result;
+        }
+
+        private Stream GetOutlookAttachmentStream(IDataObject data, int index)
+        {
+            if (data.GetData("FileContents") is MemoryStream singleStream && index == 0)
+            {
+                return singleStream;
+            }
+
+            // Handle multiple attachments
+            if (data.GetData("FileContents") is MemoryStream[] multipleStreams && index < multipleStreams.Length)
+            {
+                return multipleStreams[index];
+            }
+
+            return Stream.Null;
+        }
+
 
         private void InitializeForm()
         {
