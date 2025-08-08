@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -19,6 +20,7 @@ namespace Logistiek_Bonnensorteerder
 
         // Could have taken this from the Datetime object, but we want them to be consistent regardless of culture settings and include a number.
         private static string[] months = { "01. januari", "02. februari" , "03. maart", "04. april", "05. mei", "06. juni", "07. juli", "08. augustus", "09. september", "10. october", "11. november", "12. december"};
+        private static FileDragAndDropHelper DragDropHelper = new FileDragAndDropHelper();
 
         #endregion
 
@@ -195,26 +197,46 @@ namespace Logistiek_Bonnensorteerder
             }
             else
             {
-                e.Effect = DragDropEffects.None;
+                DragDropHelper.DragEnter(sender, e);
             }
         }
 
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        private async void MainForm_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if ((string[])e.Data.GetData(DataFormats.FileDrop) is string[] files)
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 IEnumerable<string> pdfFiles = files.Where(f => Path.GetExtension(f).Equals(PdfFileExtension, StringComparison.OrdinalIgnoreCase));
                 HandleOpenedFiles(pdfFiles.ToArray());
+                return;
             }
             else if (e.Data.GetDataPresent("FileGroupDescriptor"))
             {
-                // Handle Outlook attachments
+                // Handle "old" Outlook attachments
                 List<string> savedPdfPaths = SavePdfAttachmentsFromOutlook(e.Data);
                 if (savedPdfPaths.Any())
                 {
                     HandleOpenedFiles(savedPdfPaths.ToArray());
+                    return;
                 }
+            }
+
+            try
+            {
+                string[] filesAsync = await DragDropHelper.DragDropFilesAsync(e);
+                if (filesAsync != null && filesAsync.Length > 0)
+                {
+                    IEnumerable<string> pdfFiles = filesAsync.Where(f => Path.GetExtension(f).Equals(PdfFileExtension, StringComparison.OrdinalIgnoreCase));
+                    HandleOpenedFiles(pdfFiles.ToArray());
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show("Geen bruikbare bestanden aangetroffen in de Drag&Drop. Alleen PDF bestanden worden ondersteund.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fout gevonden bij het verwerken van: {ex.Message}");
             }
         }
 
