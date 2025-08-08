@@ -30,7 +30,7 @@ namespace Logistiek_Bonnensorteerder
         public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex]}{Environment.NewLine}", Environment.NewLine, "");
         
         // Generate the path name for the current file to be saved in, which includes the DocumentTypeFolderName and the date the user entered in the form.
-        public string DestinationFolder => $"{ConfigFile.destinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
+        public string DestinationFolder => $"{ConfigFile.DestinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
         
         // If the currently seleced file is changed, automatically reset some form elements and reset the PDF preview.
         public string SelectedFile

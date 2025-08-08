@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -51,8 +52,24 @@ namespace Logistiek_Bonnensorteerder
             }
         }
 
+        private string TransformOnedrivePath(string original)
+        {
+            if (original.ToLower().StartsWith("onedrive://"))
+            {
+                return Regex.Replace(original, "onedrive://", Environment.GetEnvironmentVariable("OneDrive"), RegexOptions.IgnoreCase);
+            }
+            else if (original.ToLower().StartsWith("onedrive:\\\\"))
+            {
+                return Regex.Replace(original, "onedrive:\\\\", Environment.GetEnvironmentVariable("OneDrive"), RegexOptions.IgnoreCase);
+            }
+
+            return original;
+        }
+
         private bool IsValidLocalPath(string path)
         {
+            path = TransformOnedrivePath(path);
+
             if (string.IsNullOrWhiteSpace(path))
                 return false;
 
@@ -63,7 +80,7 @@ namespace Logistiek_Bonnensorteerder
 
                 // Extra check: root moet aanwezig zijn (bijvoorbeeld "C:\" of "\\server\share")
                 string root = Path.GetPathRoot(fullPath);
-                return !string.IsNullOrWhiteSpace(root) && Path.IsPathRooted(fullPath);
+                return !string.IsNullOrWhiteSpace(root) && (Path.IsPathRooted(fullPath));
             }
             catch
             {
@@ -76,25 +93,53 @@ namespace Logistiek_Bonnensorteerder
             if (string.IsNullOrWhiteSpace(inputPath))
                 throw new ArgumentException("Pad mag niet leeg zijn.");
 
-            // Verandert naar absoluut pad (ook voor relatieve paden).
-            string fullPath = Path.GetFullPath(inputPath);
-
-            // Controleer of het pad lijkt op een bestand (heeft bestandsextensie)
-            // Zo ja: strip bestand, ga naar directory.
-            if (Path.HasExtension(fullPath))
+            if (inputPath.ToLower().StartsWith("onedrive://"))
             {
-                fullPath = Path.GetDirectoryName(fullPath);
+                return Regex.Replace(inputPath, "onedrive://", "onedrive:\\\\", RegexOptions.IgnoreCase);
             }
 
-            // Verwijder eventuele trailing slashes (zonder root te verwijderen, zoals "C:\")
-            if (fullPath.EndsWith(Path.DirectorySeparatorChar.ToString()) && fullPath.Length > Path.GetPathRoot(fullPath).Length)
+            bool isCustomScheme = Regex.IsMatch(inputPath, @"^[a-zA-Z0-9]+:\\\\");
+
+            if (isCustomScheme)
             {
-                fullPath = fullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                // Normalize slashes and remove trailing ones
+                string cleaned = inputPath.Replace('/', '\\').TrimEnd('\\');
+
+                // Check if it ends with a filename (e.g., has an extension after last slash)
+                int lastSlash = cleaned.LastIndexOf('\\');
+                if (lastSlash >= 0 && lastSlash < cleaned.Length - 1)
+                {
+                    string lastSegment = cleaned.Substring(lastSlash + 1);
+                    if (lastSegment.Contains('.'))
+                    {
+                        // Looks like a file: remove it
+                        cleaned = cleaned.Substring(0, lastSlash);
+                    }
+                }
+
+                return cleaned;
             }
+            else
+            {
+                // Verandert naar absoluut pad (ook voor relatieve paden).
+                string fullPath = Path.GetFullPath(inputPath);
 
-            fullPath = Regex.Replace(fullPath, Environment.NewLine, "");
+                // Controleer of het pad lijkt op een bestand (heeft bestandsextensie)
+                // Zo ja: strip bestand, ga naar directory.
+                if (Path.HasExtension(fullPath))
+                {
+                    fullPath = Path.GetDirectoryName(fullPath);
+                }
 
-            return fullPath;
+                // Verwijder eventuele trailing slashes (zonder root te verwijderen, zoals "C:\")
+                if (fullPath.EndsWith(Path.DirectorySeparatorChar.ToString()) && fullPath.Length > Path.GetPathRoot(fullPath).Length)
+                {
+                    fullPath = fullPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                }
+
+                fullPath = Regex.Replace(fullPath, Environment.NewLine, "");
+                return fullPath;
+            }
         }
 
         #endregion
