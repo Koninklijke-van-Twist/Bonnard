@@ -265,7 +265,7 @@ namespace Logistiek_Bonnensorteerder
         {
             string result = "";
 
-            result += $"{dateTimePicker.Value.Year}-{dateTimePicker.Value.Month}-{dateTimePicker.Value.Day}";
+            result += $"{dateTimePicker.Value.Year}-{dateTimePicker.Value.Month.ToString("d2")}-{dateTimePicker.Value.Day.ToString("d2")}";
 
             if (departmentDropdown.SelectedItem != null && departmentDropdown.SelectedIndex != 0)
             {

@@ -116,9 +116,9 @@
             this.orderNumberLabel.AutoSize = true;
             this.orderNumberLabel.Location = new System.Drawing.Point(9, 185);
             this.orderNumberLabel.Name = "orderNumberLabel";
-            this.orderNumberLabel.Size = new System.Drawing.Size(107, 13);
+            this.orderNumberLabel.Size = new System.Drawing.Size(70, 13);
             this.orderNumberLabel.TabIndex = 6;
-            this.orderNumberLabel.Text = "Termijnorder Nummer";
+            this.orderNumberLabel.Text = "Ordernummer";
             // 
             // pickbonTextbox
             // 
