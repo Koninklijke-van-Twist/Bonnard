@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -32,7 +31,7 @@ namespace Logistiek_Bonnensorteerder
         public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].name}{Environment.NewLine}", Environment.NewLine, "");
         
         // Generate the path name for the current file to be saved in, which includes the DocumentTypeFolderName and the date the user entered in the form.
-        public string DestinationFolder => $"{ConfigFile.DestinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
+        public string DestinationFolder => $"{ConfigFile.LocalizedDestinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
         
         // If the currently seleced file is changed, automatically reset some form elements and reset the PDF preview.
         public string SelectedFile
@@ -381,6 +380,11 @@ namespace Logistiek_Bonnensorteerder
 
             documentTypeDropdown.Items.Clear();
             documentTypeDropdown.Items.AddRange(ConfigFile.documentTypes.Select(o => o.name).ToArray());
+
+            if(!Directory.Exists(ConfigFile.LocalizedDestinationPathRoot))
+            {
+                MessageBox.Show($"De bestemmingsmap bestaat (nog) niet. Deze wordt voor u aangemaakt bij het opslaan van het eerste bestand. Controleer of dit de bedoeling is.\n\n({ConfigFile.LocalizedDestinationPathRoot})", "Basispad niet gevonden", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private bool OutlookContainsPdf(IDataObject data)

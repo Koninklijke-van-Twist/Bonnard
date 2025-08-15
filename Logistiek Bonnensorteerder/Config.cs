@@ -6,7 +6,7 @@ namespace Logistiek_Bonnensorteerder
 {
     public class Config
     {
-        public string DestinationPathRoot
+        public string LocalizedDestinationPathRoot
         {
             get
             {
