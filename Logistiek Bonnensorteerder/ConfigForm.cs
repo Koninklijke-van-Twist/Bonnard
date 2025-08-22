@@ -153,7 +153,7 @@ namespace Logistiek_Bonnensorteerder
 
             Label label = new Label
             {
-                Text = $"{index.ToString("d2")} {entry.name}",
+                Text = $"{index.ToString("d2")} {entry.name}{(entry.createSubfolderPerDocument? " 📁" : "")}",
                 AutoSize = true,
                 Location = new Point(0, 7)
             };
@@ -201,6 +201,7 @@ namespace Logistiek_Bonnensorteerder
                 if (editForm.ShowDialog() == DialogResult.OK)
                 {
                     entry.name = CurrentlyEditedEntry.name;
+                    entry.createSubfolderPerDocument = CurrentlyEditedEntry.createSubfolderPerDocument;
                     entry.requiredEntries = new Dictionary<string, bool>(CurrentlyEditedEntry.requiredEntries);
                     entry.allowedEntries = new Dictionary<string, bool>(CurrentlyEditedEntry.allowedEntries);
 

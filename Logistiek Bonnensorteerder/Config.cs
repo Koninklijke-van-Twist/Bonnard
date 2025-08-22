@@ -32,6 +32,7 @@ namespace Logistiek_Bonnensorteerder
         public class RestrictableListEntry
         {
             public string name;
+            public bool createSubfolderPerDocument = false;
             public Dictionary<string, bool> allowedEntries = new Dictionary<string, bool>();
             public Dictionary<string, bool> requiredEntries = new Dictionary<string, bool>();
 
@@ -40,6 +41,7 @@ namespace Logistiek_Bonnensorteerder
                 return new RestrictableListEntry
                 {
                     name = this.name,
+                    createSubfolderPerDocument = this.createSubfolderPerDocument,
                     allowedEntries = new Dictionary<string, bool>(this.allowedEntries),
                     requiredEntries = new Dictionary<string, bool>(this.requiredEntries)
                 };

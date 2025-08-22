@@ -47,6 +47,7 @@
             this.departmentAllowedCheck = new System.Windows.Forms.CheckBox();
             this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.saveButton = new System.Windows.Forms.Button();
+            this.createSubfolderPerDocumentCheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // nameTextBox
@@ -64,7 +65,7 @@
             this.dateField.Checked = true;
             this.dateField.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dateField.Enabled = false;
-            this.dateField.Location = new System.Drawing.Point(12, 240);
+            this.dateField.Location = new System.Drawing.Point(12, 277);
             this.dateField.Name = "dateField";
             this.dateField.Size = new System.Drawing.Size(57, 17);
             this.dateField.TabIndex = 1;
@@ -74,7 +75,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 40);
+            this.label1.Location = new System.Drawing.Point(9, 77);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(168, 13);
             this.label1.TabIndex = 2;
@@ -83,7 +84,7 @@
             // departmentCheck
             // 
             this.departmentCheck.AutoSize = true;
-            this.departmentCheck.Location = new System.Drawing.Point(12, 263);
+            this.departmentCheck.Location = new System.Drawing.Point(12, 300);
             this.departmentCheck.Name = "departmentCheck";
             this.departmentCheck.Size = new System.Drawing.Size(64, 17);
             this.departmentCheck.TabIndex = 3;
@@ -94,7 +95,7 @@
             // orderNumberCheck
             // 
             this.orderNumberCheck.AutoSize = true;
-            this.orderNumberCheck.Location = new System.Drawing.Point(12, 286);
+            this.orderNumberCheck.Location = new System.Drawing.Point(12, 323);
             this.orderNumberCheck.Name = "orderNumberCheck";
             this.orderNumberCheck.Size = new System.Drawing.Size(126, 17);
             this.orderNumberCheck.TabIndex = 4;
@@ -105,7 +106,7 @@
             // pickbonCheck
             // 
             this.pickbonCheck.AutoSize = true;
-            this.pickbonCheck.Location = new System.Drawing.Point(12, 309);
+            this.pickbonCheck.Location = new System.Drawing.Point(12, 346);
             this.pickbonCheck.Name = "pickbonCheck";
             this.pickbonCheck.Size = new System.Drawing.Size(107, 17);
             this.pickbonCheck.TabIndex = 5;
@@ -116,7 +117,7 @@
             // customerNameCheck
             // 
             this.customerNameCheck.AutoSize = true;
-            this.customerNameCheck.Location = new System.Drawing.Point(12, 332);
+            this.customerNameCheck.Location = new System.Drawing.Point(12, 369);
             this.customerNameCheck.Name = "customerNameCheck";
             this.customerNameCheck.Size = new System.Drawing.Size(76, 17);
             this.customerNameCheck.TabIndex = 6;
@@ -127,7 +128,7 @@
             // transporterNameCheck
             // 
             this.transporterNameCheck.AutoSize = true;
-            this.transporterNameCheck.Location = new System.Drawing.Point(12, 355);
+            this.transporterNameCheck.Location = new System.Drawing.Point(12, 392);
             this.transporterNameCheck.Name = "transporterNameCheck";
             this.transporterNameCheck.Size = new System.Drawing.Size(86, 17);
             this.transporterNameCheck.TabIndex = 7;
@@ -142,7 +143,7 @@
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(12, 378);
+            this.checkBox1.Location = new System.Drawing.Point(12, 415);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(95, 17);
             this.checkBox1.TabIndex = 8;
@@ -152,7 +153,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 224);
+            this.label2.Location = new System.Drawing.Point(9, 261);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(170, 13);
             this.label2.TabIndex = 9;
@@ -165,7 +166,7 @@
             this.checkBox2.Checked = true;
             this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(12, 194);
+            this.checkBox2.Location = new System.Drawing.Point(12, 231);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(95, 17);
             this.checkBox2.TabIndex = 16;
@@ -177,7 +178,7 @@
             this.transporterNameAllowedCheck.AutoSize = true;
             this.transporterNameAllowedCheck.Checked = true;
             this.transporterNameAllowedCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.transporterNameAllowedCheck.Location = new System.Drawing.Point(12, 171);
+            this.transporterNameAllowedCheck.Location = new System.Drawing.Point(12, 208);
             this.transporterNameAllowedCheck.Name = "transporterNameAllowedCheck";
             this.transporterNameAllowedCheck.Size = new System.Drawing.Size(86, 17);
             this.transporterNameAllowedCheck.TabIndex = 15;
@@ -190,7 +191,7 @@
             this.customerNameAllowedCheck.AutoSize = true;
             this.customerNameAllowedCheck.Checked = true;
             this.customerNameAllowedCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.customerNameAllowedCheck.Location = new System.Drawing.Point(12, 148);
+            this.customerNameAllowedCheck.Location = new System.Drawing.Point(12, 185);
             this.customerNameAllowedCheck.Name = "customerNameAllowedCheck";
             this.customerNameAllowedCheck.Size = new System.Drawing.Size(76, 17);
             this.customerNameAllowedCheck.TabIndex = 14;
@@ -203,7 +204,7 @@
             this.pickbonAllowedCheck.AutoSize = true;
             this.pickbonAllowedCheck.Checked = true;
             this.pickbonAllowedCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.pickbonAllowedCheck.Location = new System.Drawing.Point(12, 125);
+            this.pickbonAllowedCheck.Location = new System.Drawing.Point(12, 162);
             this.pickbonAllowedCheck.Name = "pickbonAllowedCheck";
             this.pickbonAllowedCheck.Size = new System.Drawing.Size(107, 17);
             this.pickbonAllowedCheck.TabIndex = 13;
@@ -216,7 +217,7 @@
             this.orderNumberAllowedCheck.AutoSize = true;
             this.orderNumberAllowedCheck.Checked = true;
             this.orderNumberAllowedCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.orderNumberAllowedCheck.Location = new System.Drawing.Point(12, 102);
+            this.orderNumberAllowedCheck.Location = new System.Drawing.Point(12, 139);
             this.orderNumberAllowedCheck.Name = "orderNumberAllowedCheck";
             this.orderNumberAllowedCheck.Size = new System.Drawing.Size(126, 17);
             this.orderNumberAllowedCheck.TabIndex = 12;
@@ -229,7 +230,7 @@
             this.departmentAllowedCheck.AutoSize = true;
             this.departmentAllowedCheck.Checked = true;
             this.departmentAllowedCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.departmentAllowedCheck.Location = new System.Drawing.Point(12, 79);
+            this.departmentAllowedCheck.Location = new System.Drawing.Point(12, 116);
             this.departmentAllowedCheck.Name = "departmentAllowedCheck";
             this.departmentAllowedCheck.Size = new System.Drawing.Size(64, 17);
             this.departmentAllowedCheck.TabIndex = 11;
@@ -244,7 +245,7 @@
             this.checkBox8.Checked = true;
             this.checkBox8.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox8.Enabled = false;
-            this.checkBox8.Location = new System.Drawing.Point(12, 56);
+            this.checkBox8.Location = new System.Drawing.Point(12, 93);
             this.checkBox8.Name = "checkBox8";
             this.checkBox8.Size = new System.Drawing.Size(57, 17);
             this.checkBox8.TabIndex = 10;
@@ -253,7 +254,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(12, 401);
+            this.saveButton.Location = new System.Drawing.Point(12, 438);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(177, 23);
             this.saveButton.TabIndex = 17;
@@ -261,11 +262,23 @@
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
+            // createSubfolderCheckbox
+            // 
+            this.createSubfolderPerDocumentCheckbox.AutoSize = true;
+            this.createSubfolderPerDocumentCheckbox.Location = new System.Drawing.Point(12, 47);
+            this.createSubfolderPerDocumentCheckbox.Name = "createSubfolderCheckbox";
+            this.createSubfolderPerDocumentCheckbox.Size = new System.Drawing.Size(177, 17);
+            this.createSubfolderPerDocumentCheckbox.TabIndex = 18;
+            this.createSubfolderPerDocumentCheckbox.Text = "Submap aanmaken per bestand";
+            this.createSubfolderPerDocumentCheckbox.UseVisualStyleBackColor = true;
+            this.createSubfolderPerDocumentCheckbox.CheckedChanged += new System.EventHandler(this.createSubfolderPerDocumentCheckbox_CheckedChanged);
+            // 
             // EditEntryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(201, 434);
+            this.ClientSize = new System.Drawing.Size(201, 470);
+            this.Controls.Add(this.createSubfolderPerDocumentCheckbox);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.transporterNameAllowedCheck);
@@ -313,5 +326,6 @@
         private System.Windows.Forms.CheckBox departmentAllowedCheck;
         private System.Windows.Forms.CheckBox checkBox8;
         private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.CheckBox createSubfolderPerDocumentCheckbox;
     }
 }

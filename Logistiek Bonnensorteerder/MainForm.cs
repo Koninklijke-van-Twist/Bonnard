@@ -27,11 +27,13 @@ namespace Logistiek_Bonnensorteerder
 
         #region Properties
 
+        public bool ShouldCreateSubfolderPerDocument => ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].createSubfolderPerDocument || ConfigFile.departments[departmentDropdown.SelectedIndex - 1].createSubfolderPerDocument;
+
         // Generate the folder name for the current file's document type
-        public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].name}{Environment.NewLine}", Environment.NewLine, "");
+        public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].name}", Environment.NewLine, "");
         
         // Generate the path name for the current file to be saved in, which includes the DocumentTypeFolderName and the date the user entered in the form.
-        public string DestinationFolder => $"{ConfigFile.LocalizedDestinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\";
+        public string DestinationFolder => $"{ConfigFile.LocalizedDestinationPathRoot}\\{DocumentTypeFolderName}\\{dateTimePicker.Value.Year}\\{months[dateTimePicker.Value.Month-1]}\\{(ShouldCreateSubfolderPerDocument? $"{GetResultFileName(false)}\\" : "")}";
         
         // If the currently seleced file is changed, automatically reset some form elements and reset the PDF preview.
         public string SelectedFile
@@ -260,7 +262,7 @@ namespace Logistiek_Bonnensorteerder
         /// Generate a proper filename based on all input values for the currently selected file.
         /// This includes a .pdf file extension.
         /// </summary>
-        private string GetResultFileName()
+        private string GetResultFileName(bool includeExtension = true)
         {
             string result = "";
 
@@ -293,7 +295,7 @@ namespace Logistiek_Bonnensorteerder
 
             result += $"_{documentTypeDropdown.SelectedItem as string}";
 
-            return result + PdfFileExtension;
+            return result + (includeExtension? PdfFileExtension : "");
         }
 
         private void SetAllowedRequiredElements()

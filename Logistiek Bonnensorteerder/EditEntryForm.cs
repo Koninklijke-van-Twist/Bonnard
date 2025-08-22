@@ -19,6 +19,8 @@ namespace Logistiek_Bonnensorteerder
 
             nameTextBox.Text = ConfigForm.CurrentlyEditedEntry.name;
 
+            createSubfolderPerDocumentCheckbox.Checked = ConfigForm.CurrentlyEditedEntry.createSubfolderPerDocument;
+
             departmentAllowedCheck.Checked = ConfigForm.CurrentlyEditedEntry.allowedEntries["department"];
             orderNumberAllowedCheck.Checked = ConfigForm.CurrentlyEditedEntry.allowedEntries["orderNumber"];
             pickbonAllowedCheck.Checked = ConfigForm.CurrentlyEditedEntry.allowedEntries["pickbon"];
@@ -125,6 +127,11 @@ namespace Logistiek_Bonnensorteerder
         {
             ConfigForm.CurrentlyEditedEntry.name = nameTextBox.Text.Trim();
             nameTextBox.Text = MakeFilenameSafe(nameTextBox.Text);
+        }
+
+        private void createSubfolderPerDocumentCheckbox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            ConfigForm.CurrentlyEditedEntry.createSubfolderPerDocument = createSubfolderPerDocumentCheckbox.Checked;
         }
 
         private void saveButton_Click(object sender, System.EventArgs e)
