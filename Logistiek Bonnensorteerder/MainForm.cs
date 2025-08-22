@@ -27,7 +27,7 @@ namespace Logistiek_Bonnensorteerder
 
         #region Properties
 
-        public bool ShouldCreateSubfolderPerDocument => ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].createSubfolderPerDocument || ConfigFile.departments[departmentDropdown.SelectedIndex - 1].createSubfolderPerDocument;
+        public bool ShouldCreateSubfolderPerDocument => ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].createSubfolderPerDocument || (departmentDropdown.SelectedIndex > 0 && ConfigFile.departments[departmentDropdown.SelectedIndex - 1].createSubfolderPerDocument);
 
         // Generate the folder name for the current file's document type
         public string DocumentTypeFolderName => Regex.Replace($"{documentTypeDropdown.SelectedIndex + 1:D2}. {ConfigFile.documentTypes[documentTypeDropdown.SelectedIndex].name}", Environment.NewLine, "");
